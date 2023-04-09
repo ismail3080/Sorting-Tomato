@@ -124,12 +124,11 @@ def main(argv):
     modelfile = os.path.join(dir_path, model)
 
     print('MODEL: ' + modelfile)
-    
     while True:
         # Move the servo to 90 
         
         #Oled setup counter
-        draw.text((x, top),       "Waiting for 1st tomato to pass",  font=font, fill=255)
+
         disp.image(image)
         disp.display()
         time.sleep(.1)
@@ -201,11 +200,13 @@ def main(argv):
                     if(red_avg > validationPercentage):
                         print("High possibility RED TOMATO")
                         print("Turning the motor for 180 deg")
+                        countR += 1
                         p2.ChangeDutyCycle(12.5)
                         time.sleep(servo2Speed)
                         p2.ChangeDutyCycle(2.5)
                     #elif(green_avg > 0.55):
                     else:
+                        countG += 1
                         print("High possibility GREEN TOMATO")
                         print("Turning the motor for 100 deg")
                         #Duty cycle = (100 / 180) * (12.5 - 2.5) + 2.5
@@ -215,32 +216,16 @@ def main(argv):
                         p2.ChangeDutyCycle(2.5)
                     print("green average: " + str(green_avg))
                     print("red average: " + str(red_avg))
-                    # initialize counters
-                    countG = 0
-                    countR = 0
-
-                    # process data
-                    for i in range(0, len(data), 2):
-                        print("({0}, {1})".format(data[i], data[i+1]))
-                        green += data[i]
-                        red += data[i+1]
-                        
-                    green_avg = round(green / 3, 2)
-                    red_avg = round(red / 3, 2)
-
-                    # update counters based on averages
-                    if red_avg > validationPercentage:
-                        countR += 1
-                    elif green_avg > validationPercentage:
-                        countG += 1
-
                     # print results
                     print("green average: " + str(green_avg))
                     print("red average: " + str(red_avg))
                     print("countG: " + str(countG))
                     print("countR: " + str(countR))
-                    
-
+                    draw.text((x, top),       "Green Tomatoes : "+str(countG),  font=font, fill=255)
+                    draw.text((x, top+8),     "Red Tomatoes : "+str(countR), font=font, fill=255)
+                    disp.image(image)
+                    disp.display()
+                    # time.sleep(.1)
                 finally:
                     print('here')
                     if (runner):
@@ -248,30 +233,4 @@ def main(argv):
 if __name__ == "__main__":
    main(sys.argv[1:])
 
-#    # get validation percentage from user
-# validationPercentage = float(input("Enter validation percentage: "))
 
-# # initialize counters
-# countG = 0
-# countR = 0
-
-# # process data
-# for i in range(0, len(data), 2):
-#     print("({0}, {1})".format(data[i], data[i+1]))
-#     green += data[i]
-#     red += data[i+1]
-    
-# green_avg = round(green / 3, 2)
-# red_avg = round(red / 3, 2)
-
-# # update counters based on averages
-# if red_avg > validationPercentage:
-#     countR += 1
-# elif green_avg > validationPercentage:
-#     countG += 1
-
-# # print results
-# print("green average: " + str(green_avg))
-# print("red average: " + str(red_avg))
-# print("countG: " + str(countG))
-# print("countR: " + str(countR))
